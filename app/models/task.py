@@ -1,14 +1,14 @@
-from typing import List, Dict, Optional
+from typing import List, Dict, OrderedDict, Optional
 from datetime import datetime
 from enum import Enum
 from pydantic import BaseModel, Field
 from uuid import UUID
 
 class TaskStatus(str, Enum):
-    open = 'open'
-    inprogress = 'in progress'
-    blocked = 'blocked'
-    completed = 'completed'
+    OPEN = 'open'
+    INPROGRESS = 'in progress'
+    BLOCKED = 'blocked'
+    COMPLETED = 'completed'
 
 class Task(BaseModel):
     """
@@ -21,7 +21,7 @@ class Task(BaseModel):
         None, title="The description of the task", max_length=300
     )
     status: TaskStatus = Field(
-        TaskStatus.open, title="Status",  description= "Status of the task"
+        TaskStatus.OPEN, title="Status",  description= "Status of the task"
     )
     mergeconflict: Optional[bool] = Field(
         False, title="Merge confict flag", description= "Flag if manual reconciliation required"
@@ -40,7 +40,7 @@ class TasksList(BaseModel):
     """
     uuid: UUID = Field(...,title="UUID", description="Unique identifier")
     title: str = Field(..., title="Title", description= "Title of the task")
-    tasks: Optional[List[Task]] = []
+    tasks: Optional[OrderedDict[UUID,Task]] = OrderedDict()
     createdAt: datetime = Field(...,title="Created At", description="Creation time")
     createdBy: UUID = Field(...,title="UUID", description="Unique identifier of the User")
     modifiedAt: datetime = Field(...,title="Modified At", description="Modification time")
@@ -52,4 +52,4 @@ class TasksListsRepo(BaseModel):
     """
     uuid: UUID = Field(...,title="UUID", description="Unique identifier")
     version: int = Field(..., title="Version", description= "Version number")
-    TasksListsDict: Optional[Dict[UUID,TasksList]] = {}
+    TasksListsDict: Dict[UUID,TasksList] = {}
