@@ -52,4 +52,4 @@ class TasksListsRepo(BaseModel):
     """
     uuid: UUID = Field(...,title="UUID", description="Unique identifier")
     version: int = Field(..., title="Version", description= "Version number")
-    TasksListsDict: Dict[UUID,TasksList] = {}
+    tasksListsDict: Dict[UUID,TasksList] = {}

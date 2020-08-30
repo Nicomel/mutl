@@ -1,9 +1,10 @@
 
 import abc
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, TypeVar
 from enum import Enum
 from pydantic import BaseModel, Field
 from uuid import UUID
+from .task import Task, TasksList
 
 class Operation(str, Enum):
     CREATE = 'create'
@@ -12,8 +13,10 @@ class Operation(str, Enum):
     DELETE = 'delete'
 
 class ObjectType(str, Enum):
-    TASK = 'task'
-    TASKSLIST = 'taskslist'
+    TASK = 'Task'
+    TASKSLIST = 'TasksList'
+
+# TaskOrList = TypeVar('TaskOrList', Task, TasksList)
 
 class DataChangeLog(BaseModel, abc.ABC):
     """
@@ -22,7 +25,7 @@ class DataChangeLog(BaseModel, abc.ABC):
     operation: Operation = Field(..., title="Operation", description="Operation applied to the type of object")
     objectType: ObjectType = Field(..., title="Object type", description="Type of object related to the data change")
 
-class DataChangesList(DataChangeLog):
+class DataChangesList(BaseModel):
     """
     This is the actual class to represent a list of changes
     """
@@ -30,17 +33,27 @@ class DataChangesList(DataChangeLog):
     fromRepoVersion: int = Field(..., title="Based version", description= "Based version to apply the changes on")
     changeLogsList: List[DataChangeLog]
 
-class DataCreationLog(DataChangeLog):
+class TasksListCreationLog(DataChangeLog):
     """
     This is the actual class to represent a data creation
     """
-    jsonObject: str = Field(...,title="JSON object", description="JSON object to be created")
+    serializedObject: bytes = Field(...,title="Serialized object", description="Serialized object to be created")
+    # createdObject: TaskOrList
+
+class TaskCreationLog(DataChangeLog):
+    """
+    This is the actual class to represent a data creation
+    """
+    tluuid: UUID = Field(...,title="UUID", description="Unique tasks list identifier")
+    pos: int = Field(0, title="Priority of the task", ge=0) 
+    serializedObject: bytes = Field(...,title="Serialized object", description="Serialized object to be created")
 
 class DataUpdateLog(DataChangeLog):
     """
     This is the actual class to represent a data update
     """
-    uuid: UUID = Field(...,title="UUID", description="Unique object identifier")
+    tluuid: UUID = Field(...,title="UUID", description="Unique object identifier")
+    tuuid: Optional[UUID] = Field(None, title="UUID", description="Unique object identifier")
     fieldName: str = Field(..., title="Name of the field", description= "Name of the field to be updated")
     fieldChange: str = Field(..., title="Updated string", description= "String to replace/append the field content")
 
@@ -48,4 +61,5 @@ class DataDeleteLog(DataChangeLog):
     """
     This is the actual class to represent a data deletion
     """
-    uuid: UUID = Field(...,title="UUID", description="Unique object identifier")
+    tluuid: UUID = Field(...,title="UUID", description="Unique object identifier")
+    tuuid: Optional[UUID] = Field(None, title="UUID", description="Unique object identifier")
