@@ -49,12 +49,12 @@ def initialize_tst_data():
                 modifiedBy = user_uuid
             )
             tl.tasks[tuuid] = t
-        tst_tlr.TasksListsDict[tluuid] = tl
+        tst_tlr.tasksListsDict[tluuid] = tl
 
 def test_create_taskslist():
     response = client.post(
         "/taskslist/", 
-        json=jsonable_encoder(tst_tlr.TasksListsDict[list(tst_tlr.TasksListsDict)[0]])
+        json=jsonable_encoder(tst_tlr.tasksListsDict[list(tst_tlr.tasksListsDict)[0]])
         )
     assert response.status_code == 200
-    assert response.json() == {"msg": "Tasks list created"}
+    assert response.json() == {"msg": "Tasks list creation submitted"}
