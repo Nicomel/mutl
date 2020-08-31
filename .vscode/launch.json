@@ -8,7 +8,7 @@
             "name": "Python: MUTL",
             "type": "python",
             "request": "launch",
-            "cwd": "/Users/nicolasmetivier/Code/gitub/mutl",
+            "cwd": "/Users/nicolasmetivier/Code/git/github/mutl",
             "module": "app.main"
         }
     ]

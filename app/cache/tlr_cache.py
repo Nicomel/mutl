@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 class TLRCache(object):
     def __init__(self, tlrFile: TLRFile):
         self.tlr = tlrFile.load()
+        self.tlrFile = tlrFile
 
     def update(self, changesList: DataChangesList, doPersist: bool = False) -> bool:
         """
@@ -101,7 +102,7 @@ class TLRCache(object):
         
         # Persist cache if required
         if doPersist:
-            TLRFile.persist(self.tlr)
+            self.tlrFile.persist(self.tlr)
 
         return True
     
