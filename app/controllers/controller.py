@@ -50,10 +50,12 @@ def consumeServerChanges(changesList: DataChangesList) -> bool:
     # Push server changeslist into server queue
     tlrServerQueue.push(changesList)
     
-    ### BACKGROUND TASK: LOOP OVER SERVER QUEUE
     # Local buffered changeslist are removed from the local queue once received from the server
     tlrLocalQueue.removeItemIfexist(changesList.uuid)
 
+    return True
+
+def synchronize_changes():
     # We do not integrate server changeslist as long as local changeslist have not been committed on server side
     if tlrLocalQueue.isNotEmpty():
         # Push local changeslist buffered to the server
@@ -75,5 +77,5 @@ def consumeServerChanges(changesList: DataChangesList) -> bool:
             # tlrCache.refresh(serverTlr)
         # When repo up to date, update
         tlrCache.update(changesList, doPersist=True)
-
+    
     return True

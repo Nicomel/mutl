@@ -4,7 +4,7 @@ from uuid import UUID, uuid1
 
 import logging
 
-from fastapi import FastAPI, Path
+from fastapi import FastAPI, Path, BackgroundTasks
 import pickle
 # from fastapi.encoders import jsonable_encoder
 from .config import mutl_config as config
@@ -26,6 +26,19 @@ async def get_all_taskslists():
     """
     cachedTlr = ctrl.getCachedTlr()
     return cachedTlr
+
+@app.post("/changesnotification/")
+async def notify_changeslist(changesList: DataChangesList, backgroundTasks: BackgroundTasks):
+    """
+    Create a tasks list
+    """
+    # Consume changesList received
+    ctrl.consumeServerChanges(changesList)
+    
+    # Async background tasks triggered to synchronize changes with server
+    background_tasks.add_task(ctrl.synchronize_changes)
+
+    return {"msg": "Changes list received"}
 
 @app.post("/taskslist/")
 async def create_taskslist(taskslist: TasksList):
