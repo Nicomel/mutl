@@ -1,0 +1,23 @@
+version: '3'
+services:
+  mutl:
+    image: perso/mutl:latest
+    environment:
+      MUTL_LOG_LEVEL: 'DEBUG'
+      MUTL_FILE_PATH: '/home/mutl/data/mutl_repo.pickle'
+      MUTL_LOCAL_QUEUE_PATH: '/home/mutl/data/mutl_client_queue.pickle'
+      MUTL_SERVER_QUEUE_PATH: '/home/mutl/data/mutl_server_queue.pickle'
+    ports:
+      - "8000:8000"
+    volumes: 
+      - mutl_data:/home/mutl/data
+    command: ["uvicorn","app.main:app","--host","0.0.0.0"]
+    container_name: perso-mutl
+
+volumes: 
+  mutl_data:
+    driver: local
+    driver_opts: 
+      type: none
+      device: '/Users/nicolasmetivier/Code/local/mutl'
+      o: bind

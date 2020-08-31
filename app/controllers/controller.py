@@ -50,6 +50,7 @@ def consumeServerChanges(changesList: DataChangesList) -> bool:
     # Push server changeslist into server queue
     tlrServerQueue.push(changesList)
     
+    ### BACKGROUND TASK: LOOP OVER SERVER QUEUE
     # Local buffered changeslist are removed from the local queue once received from the server
     tlrLocalQueue.removeItemIfexist(changesList.uuid)
 
