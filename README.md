@@ -28,7 +28,7 @@ At project root level:
 
 - Run the application server: `uvicorn app.main:app --reload`
 
-Connect to : <http://localhost:8080/docs#/>.
+Connect to : <http://localhost:8000/docs#/>.
 
 # Docker
 
@@ -40,4 +40,4 @@ Connect to : <http://localhost:8080/docs#/>.
 
 - Run one of the application service: 
     - `docker-compose up mutl`
-- Connect to : <http://localhost:8080/docs#/>.
+- Connect to : <http://localhost:8000/docs#/>.
